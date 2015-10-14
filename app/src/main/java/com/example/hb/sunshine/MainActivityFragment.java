@@ -27,7 +27,7 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, true);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         String [] forecastArray = {
                 "Today - Sunny - 22C",
@@ -35,7 +35,7 @@ public class MainActivityFragment extends Fragment {
                 "Today - Sunny - 22C",
                 "Today - Sunny - 22C",
                 "Today - Sunny - 22C",
-                "Today - Sunny - 22C",
+                "Today - Sunny - 22C"
         };
 
         List<String> weekForecast = new ArrayList<String>(
@@ -53,7 +53,7 @@ public class MainActivityFragment extends Fragment {
         );
         listView.setAdapter(mForecastAdapter);
 
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        return rootView;
     }
 }
 
