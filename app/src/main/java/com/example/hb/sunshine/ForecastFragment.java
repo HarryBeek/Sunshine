@@ -1,5 +1,6 @@
 package com.example.hb.sunshine;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -102,7 +103,9 @@ public class ForecastFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
               String forecast = mForecastAdapter.getItem(position);
-              Toast.makeText(getActivity(), forecast, Toast.LENGTH_SHORT).show();
+              Intent intent = new Intent(getActivity(), DetailActivity.class)
+                      .putExtra(Intent.EXTRA_TEXT, forecast);
+                startActivity(intent);
             }
         });
 
@@ -225,7 +228,6 @@ public class ForecastFragment extends Fragment {
             String format = "json";
             String units = "metric";
             int numDays = 7;
-            String appId = "bd82977b86bf27fb59a04b61b657fb6f";
 
             try {
                 // Construct the URL for the OpenWeatherMap query
@@ -236,14 +238,15 @@ public class ForecastFragment extends Fragment {
                 final String FORMAT_PARAM = "mode";
                 final String UNITS_PARAM = "units";
                 final String DAYS_PARAM = "cnt";
-                final String APP_PARAM = "appid";
+                final String APPID_PARAM = "APPID";
 
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM, params[0])
                         .appendQueryParameter(FORMAT_PARAM, format)
                         .appendQueryParameter(UNITS_PARAM, units)
                         .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
-                        .appendQueryParameter(APP_PARAM, appId)
+                        //Moet nog in build.gradle
+                        .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_WEATHER_MAP_API_KEY)
                         .build();
 
                 URL url = new URL(builtUri.toString());
