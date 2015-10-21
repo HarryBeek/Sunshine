@@ -1,8 +1,10 @@
 package com.example.hb.sunshine;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -45,6 +47,20 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
+    }
+
+    private void updateWeather() {
+        FetchWeatherTask weatherTask = new FetchWeatherTask();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = prefs.getString(getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default));
+        weatherTask.execute(location);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events
@@ -64,7 +80,10 @@ public class ForecastFragment extends Fragment {
         int id = item.getItemId();
         if(id == R.id.action_refresh) {
             FetchWeatherTask weatherTask = new FetchWeatherTask();
-            weatherTask.execute("Ede");
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String location = prefs.getString(getString(R.string.pref_location_key),
+                    getString(R.string.pref_location_default));
+            weatherTask.execute(location);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -76,24 +95,12 @@ public class ForecastFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        String [] forecastArray = {
-                "Today - Sunny - 22C",
-                "Today - Sunny - 22C",
-                "Today - Sunny - 22C",
-                "Today - Sunny - 22C",
-                "Today - Sunny - 22C",
-                "Today - Sunny - 22C"
-        };
-
-        List<String> weekForecast = new ArrayList<String>(
-                Arrays.asList(forecastArray));
-
         mForecastAdapter =
                 new ArrayAdapter<String>(
                         getActivity(),
                         R.layout.list_item_forecast,
                         R.id.list_item_forecast_textview,
-                        weekForecast);
+                        new ArrayList<String>());
 
         ListView listView = (ListView) rootView.findViewById(
                 R.id.listview_forecast
